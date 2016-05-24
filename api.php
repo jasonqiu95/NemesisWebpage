@@ -68,6 +68,8 @@ if ($op == "login") {
 	if($user->log->hasError()){
 	
 	} else {
+		$user->logOperation("save");
+
 		$fp = fopen('uploads/' . $input->email . '.json', 'w');
 		fwrite($fp, $content);
 		fclose($fp);

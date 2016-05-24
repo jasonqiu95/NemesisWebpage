@@ -15,6 +15,7 @@ abstract class UserBase
     /** @var Collection - Class configuration options */
     public $config = array(
         'userTableName'   => 'users',
+        'logTableName'   => 'logs',
         'userSession'     => 'userData',
         'userDefaultData' => array(
             'email' => 'Guess',

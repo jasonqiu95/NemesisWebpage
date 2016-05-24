@@ -18,6 +18,8 @@ class User extends UserBase
     /** @var DB_Table - The database table object */
     public $table;
 
+    public $logTable;
+
     public $isSigned;
     /**
      * Holds a unique clone number of the instance clones
@@ -218,7 +220,7 @@ class User extends UserBase
             $this->db->log = $this->log;
             //Instantiate the table DB object
             $this->table = $this->db->getTable($this->config->userTableName);
-
+            $this->logTable = $this->db->getTable($this->config->logTableName);
 
         }
         // Link the session with the user data
@@ -228,6 +230,28 @@ class User extends UserBase
         $this->_data = $this->config->userDefaultData->toArray();
         return $this;
     }
+
+    function logOperation($op) {
+        $into = array();
+        $data = array();
+
+        $into[] = 'uid';
+        $into[] = 'op';
+
+        $data['uid'] = $this->id;
+        $data['op'] = $op;
+
+        $intoStr = implode(', ', $into);
+        $values = ':' . implode(', :', $into);
+
+        $sql = "INSERT INTO _table_ ({$intoStr})
+                VALUES({$values})";
+
+        if ($this->logTable->runQuery($sql, $data)) {
+            $this->log->report('Operation has been logged');
+        }
+    }
+
     /**
      * Logs user last login in database
      *
@@ -246,7 +270,10 @@ class User extends UserBase
                 'id' => $this->id))) {
             $this->log->report('Last Login updated');
         }
+
+        $this->logOperation("login");
     }
+    
     /**
      * Logout the user
      * Logs out the current user and deletes any autologin cookies
