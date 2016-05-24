@@ -3,10 +3,22 @@
 	text-align: center
 }
 
+.white {
+  color: white;
+}
+
+body {
+  background: url(img/bg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 .c-wrapper {
 	width: 760pt;
 	margin: auto;
 }
 .big {
-  font-size: 40pt;
+  font-size: 50pt;
 }
