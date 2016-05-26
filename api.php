@@ -60,19 +60,25 @@ if ($op == "login") {
 		)
 	);
 } else if ($op == "log") {
-	
 	$input = new nemesis\Collection($data);
 
-	$user->validateLogin($input->email, $input->accessToken);
-	
-	if($user->log->hasError()){
-	
-	} else {
-		$user->logOperation("save");
-
-		$fp = fopen('uploads/' . $input->email . '.json', 'w');
+	if ($input->email === "default") {
+		$fp = fopen('uploads/' . $_SERVER['REMOTE_ADDR'] . '.json', 'w');
 		fwrite($fp, $content);
 		fclose($fp);
+	} else {
+
+		$user->validateLogin($input->email, $input->accessToken);
+
+		if ($user->log->hasError()) {
+
+		} else {
+			$user->logOperation("save");
+
+			$fp = fopen('uploads/' . $input->email . '.json', 'w');
+			fwrite($fp, $content);
+			fclose($fp);
+		}
 	}
 
 	echo json_encode(
